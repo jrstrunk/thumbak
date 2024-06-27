@@ -52,7 +52,7 @@ def save_image_with_reduced_quality(image, destination, quality):
     image.save(destination, format="webp", quality=quality)
     return destination
 
-def convert_image(source, dest, size, quality):
+def downscale(source, dest, size, quality):
     # Open the image
     image = Image.open(source)
 
@@ -67,21 +67,4 @@ def convert_image(source, dest, size, quality):
     save_image_with_reduced_quality(image, destination, quality)
 
     return destination
-
-# # Example usage:
-# convert_image(Path("example2.jpg"), (256, 212), 50)
-
-import os
-import shutil
-
-input_dir = 'size_test_input'
-output_dir = 'size_test_output'
-
-for dirpath, dirnames, filenames in os.walk(input_dir):
-    structure = os.path.join(output_dir, os.path.relpath(dirpath, input_dir))
-    if not os.path.isdir(structure):
-        os.mkdir(structure)
-    for file in filenames:
-        src_file = os.path.join(dirpath, file)
-        dst_file = os.path.join(structure, file)
-        convert_image(Path(src_file), Path(dst_file), 192, 25)
+    
