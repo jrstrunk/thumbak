@@ -8,24 +8,29 @@ with open("config.toml", "rb") as f:
     config = tomllib.load(f)
 
 def get_file_paths(source_dir, destination_dir):
-    # Convert the input directories to Path objects
     source_path = pathlib.Path(source_dir)
     destination_path = pathlib.Path(destination_dir)
+    
+    # Get all file paths recursively
+    all_files = list(source_path.rglob('*'))
 
-    # Check if the source directory exists
-    destination_path.mkdir(parents=True, exist_ok=True)
-
-    # Create the destination directory if it doesn't exist
-    destination_path.mkdir(parents=True, exist_ok=True)
-
-    # Get input to output objects for all files in the source directory 
-    return [
-        {"input": f, "output": destination_path / f.name} \
-            for f in source_path.iterdir() \
-            if f.is_file() \
-            and (f.suffix.lower() in config['accepted_image_formats']
-                or f.suffix.lower() in config['accepted_video_formats'])
-    ]
+    outputs = []
+    
+    for file_path in all_files:
+        if file_path.is_file():
+            # Calculate the relative path
+            relative_path = file_path.relative_to(source_path)
+            
+            # Create the new destination path
+            new_path = destination_path / relative_path
+            
+            # Create the directory structure if it doesn't exist
+            new_path.parent.mkdir(parents=True, exist_ok=True)
+            
+            # Move the file
+            outputs.append({"input": file_path, "output": new_path})
+    
+    return outputs
 
 files = get_file_paths("input", "output")
 
