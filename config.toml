@@ -1,0 +1,15 @@
+accepted_image_formats = [".jpg", ".jpeg", ".png", ".webp"]
+accepted_video_formats  = [".mp4", ".webm", ".mkv"]
+
+[image-output]
+# The largest dimension of the output image, if in landscape this will be the
+# width, if in portrait this will be the height
+target_size = 256
+quality = 25
+
+[video-output]
+target_size = 192
+crf = 25
+format = ".webm"
+video_bitrate = "16k"
+audio_bitrate = "16k"
