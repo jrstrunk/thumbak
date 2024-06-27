@@ -7,6 +7,7 @@ Requires Python 3.12 or higher
 
 Requires ffmpeg installed and runnable as a command in a shell
 
+Install python requirements:
 ```bash
 pip install -r requirements.txt
 ```
