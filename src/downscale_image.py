@@ -1,19 +1,14 @@
 from PIL import Image
 from pathlib import Path
 
-def downscale(source, dest, size, quality):
-    # Open the image
-    image = Image.open(source)
-
+def downscale(image, size):
     # Resize the image
     image = __resize_image(image, size)
 
     # Reduce the color depth of the image
     image = __reduce_color_depth(image)
 
-    # Save the image in WebP format with reduced quality
-    destination = dest.with_suffix(".webp")
-    image.save(destination, format="webp", quality=quality)
+    return image
 
 def __resize_image(image, target_size):
     original_width, original_height = image.size
