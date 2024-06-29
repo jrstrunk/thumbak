@@ -4,6 +4,7 @@ import src.downscale_image as image
 import src.downscale_video as video
 import src.extract_faces as extract_faces
 import src.embed_details as embed_details
+import src.generate_description as generate_description
 import PIL as pillow
 
 with open("config.toml", "rb") as f:
@@ -42,6 +43,8 @@ for f in files:
 
     if f['input'].suffix.lower() in config['accepted_image_formats']:
         input_image = pillow.Image.open(f['input'])
+
+        img_description = generate_description.for_image(input_image)
 
         downscaled_image = image.downscale(
             input_image,

@@ -163,3 +163,4 @@ input/*[\.]*
 input/**
 output/*[\.]*
 output/**
+*_test/**
