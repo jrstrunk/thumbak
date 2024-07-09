@@ -161,6 +161,7 @@ cython_debug/
 
 input/*[\.]*
 input/**
+input_store/**
 output/*[\.]*
 output/**
 *_test/**
