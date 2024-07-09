@@ -6,6 +6,7 @@ import src.extract_faces as extract_faces
 import src.embed_details as embed_details
 import src.generate_description as generate_description
 import src.form_metadata as form_metadata
+import src.determine_date as determine_date
 import PIL as pillow
 
 with open("config.toml", "rb") as f:
@@ -39,11 +40,16 @@ def get_file_paths(source_dir, destination_dir):
 files = get_file_paths("input", "output")
 
 print(f"Files found in input directory:")
-for f in files:
-    print(f"{f['input']} -> {f['output']}")
+for i, f in enumerate(files):
+    print(f"{f['input']} -> ", end="")
 
     if f['input'].suffix.lower() in config['accepted_image_formats']:
         input_image = pillow.Image.open(f['input'])
+
+        img_date = determine_date.from_image(input_image, f['input'])
+
+        img_filename = (img_date or str(i)) + ".webp"
+        print(img_filename)
 
         img_description = generate_description.for_image(input_image)
 
@@ -69,7 +75,7 @@ for f in files:
         )
 
         # Save the combined data as a new WebP file
-        with open(f["output"].with_suffix(".webp"), "wb") as f:
+        with open(f["output"].with_name(img_filename), "wb") as f:
             f.write(image_with_emdeded_data)
 
     elif f['input'].suffix.lower() in config['accepted_video_formats']:
