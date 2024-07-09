@@ -1,3 +1,4 @@
 pillow
 retina-face
 opencv-python
+dateparser

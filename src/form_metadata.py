@@ -15,9 +15,9 @@ def from_image(
 ):
     exif_data = __get_image_exif_data(image)
 
-    comment = exif_data.get('UserComment', None)
+    comment = exif_data.get("UserComment", None)
 
-    img_desc = bytes(exif_data.get('ImageDescription', ""), "utf-8") \
+    img_desc = bytes(exif_data.get("ImageDescription", ""), "utf-8") \
         + b"tbdv1" \
         + b"".join([
             b"f"
@@ -48,7 +48,10 @@ def from_image(
 
 def __get_image_exif_data(image):
     exif_data = image._getexif()
+
     if not exif_data:
         return {}
-    exif = {TAGS.get(tag, tag): value for tag, value in exif_data.items()}
-    return exif
+
+    return {
+        PIL.ExifTags.TAGS.get(tag, tag): val for tag, val in exif_data.items()
+    }
