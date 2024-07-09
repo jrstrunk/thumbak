@@ -6,6 +6,9 @@ accepted_video_formats  = [".mp4", ".webm", ".mkv"]
 # width, if in portrait this will be the height
 target_size = 256
 quality = 25
+# Metadata tags specified by the user to keep. Will significantly increase
+# the size of the output file so there are no defaults.
+user_metadata_tags = []
 
 [video-output]
 target_size = 192

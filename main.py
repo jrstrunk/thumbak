@@ -5,6 +5,7 @@ import src.downscale_video as video
 import src.extract_faces as extract_faces
 import src.embed_details as embed_details
 import src.generate_description as generate_description
+import src.form_metadata as form_metadata
 import PIL as pillow
 
 with open("config.toml", "rb") as f:
@@ -46,6 +47,12 @@ for f in files:
 
         img_description = generate_description.for_image(input_image)
 
+        metadata = form_metadata.from_image(
+            input_image, 
+            img_description, 
+            config['image-output']['user_metadata_tags'],
+        )
+
         downscaled_image = image.downscale(
             input_image,
             config['image-output']['target_size'],
@@ -56,7 +63,8 @@ for f in files:
         embedded_data = embed_details.into_image(
             downscaled_image, 
             [faces["img"] for faces in faces],
-            config['image-output']['quality']
+            config['image-output']['quality'],
+            metadata,
         )
 
         # Save the combined data as a new WebP file
