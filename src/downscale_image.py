@@ -1,7 +1,6 @@
-from PIL import Image
-from pathlib import Path
+import PIL as pillow
 
-def downscale(image, size):
+def downscale(image, size: int):
     # Resize the image
     image = __resize_image(image, size)
 
@@ -20,7 +19,7 @@ def __resize_image(image, target_size):
         new_width = target_size
         new_height = int(target_size * (original_height / original_width))
 
-    image.thumbnail((new_width, new_height), Image.Resampling.LANCZOS)
+    image.thumbnail((new_width, new_height), pillow.Image.Resampling.LANCZOS)
 
     return image
 
@@ -33,7 +32,7 @@ def __reduce_color_depth(image):
 def __convert_to_webp(source):
     """Just converts the image to webp"""
     destination = source.with_suffix(".webp")
-    image = Image.open(source)
+    image = pillow.Image.open(source)
     image.save(destination, format="webp")
     return destination
 
@@ -55,6 +54,8 @@ def __resize_crop_image(image, target_size):
         resize_box = (0, offset, original_width, original_height - offset)
 
     cropped_image = image.crop(resize_box)
-    resized_image = cropped_image.resize(target_size, Image.Resampling.LANCZOS)
+    resized_image = cropped_image.resize(
+        target_size, pillow.Image.Resampling.LANCZOS
+        )
 
     return resized_image
