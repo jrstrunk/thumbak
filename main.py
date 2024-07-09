@@ -47,12 +47,6 @@ for f in files:
 
         img_description = generate_description.for_image(input_image)
 
-        metadata = form_metadata.from_image(
-            input_image, 
-            img_description, 
-            config['image-output']['user_metadata_tags'],
-        )
-
         downscaled_image = image.downscale(
             input_image,
             config['image-output']['target_size'],
@@ -60,7 +54,14 @@ for f in files:
 
         faces = extract_faces.from_image(f['input'])
 
-        embedded_data = embed_details.into_image(
+        metadata: bytes = form_metadata.from_image(
+            input_image, 
+            img_description, 
+            [faces["xywh"] for faces in faces],
+            config['image-output']['user_metadata_tags'],
+        )
+
+        image_with_emdeded_data: bytes = embed_details.into_image(
             downscaled_image, 
             [faces["img"] for faces in faces],
             config['image-output']['quality'],
@@ -69,7 +70,7 @@ for f in files:
 
         # Save the combined data as a new WebP file
         with open(f["output"].with_suffix(".webp"), "wb") as f:
-            f.write(embedded_data)
+            f.write(image_with_emdeded_data)
 
     elif f['input'].suffix.lower() in config['accepted_video_formats']:
         video.downscale(
