@@ -3,8 +3,8 @@ import os
 import pathlib
 
 def downscale(
-    input_file, 
-    output_file, 
+    input_file: pathlib.Path,
+    output_file: pathlib.Path,
     crf: int, 
     target_size: int, 
     video_bitrate: str,

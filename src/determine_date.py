@@ -1,12 +1,12 @@
 import PIL
 import dateparser
+import pathlib
 from datetime import datetime
-from configparser import ConfigParser
 import os
 import re
 import itertools
 
-def from_image(image: PIL.Image, file_path: str) -> str: 
+def from_image(image: PIL.Image, file_path: pathlib.Path) -> str: 
     file_date, file_offset = from_photo_metadata(image)
 
     if not file_date:
@@ -82,8 +82,8 @@ def __get_image_exif_data(image):
         PIL.ExifTags.TAGS.get(tag, tag): val for tag, val in exif_data.items()
     }
 
-def from_file_name(file_name: str, config: ConfigParser):
-    file_name = ".".join(file_name.split(".")[0:-1]) # remove the extension
+def from_file_name(file_name: pathlib.Path):
+    file_name = file_name.stem
 
     possible_date_formats = []
 
@@ -196,9 +196,9 @@ def from_file_name(file_name: str, config: ConfigParser):
 
     return None, None
 
-def from_sys_file_times(file_path: str):
+def from_sys_file_times(file_path: pathlib.Path):
     """This is dangerous!"""
     # get the file modified date
-    file_date = datetime.fromtimestamp(os.path.getmtime(file_path))
+    file_date = datetime.fromtimestamp(os.path.getmtime(os.fspath(file_path)))
     return file_date.strftime("%Y%m%d%H%M%S"), \
         file_date.strftime("%z")
