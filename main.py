@@ -1,7 +1,7 @@
 import os
 import tomllib
 import pathlib
-import src.downscale_image as image
+import src.downscale as downscale
 import src.downscale_video as video
 import src.extract_faces as extract_faces
 import src.embed_details as embed_details
@@ -32,19 +32,24 @@ def main():
 
             print(f["output"])
 
-            img_description = generate_description.for_image(input_image)
+            baseline_image = downscale.image(
+                input_image,
+                config['image-input']['baseline_size'],
+            )
 
-            faces = extract_faces.from_image(f['input'])
+            img_description = generate_description.for_image(baseline_image)
+
+            faces = extract_faces.from_image(baseline_image)
 
             metadata: bytes = form_metadata.from_image(
-                input_image, 
+                baseline_image, 
                 img_description, 
                 [faces["xywh"] for faces in faces],
                 config['image-output']['user_metadata_tags'],
             )
 
-            downscaled_image = image.downscale(
-                input_image,
+            downscaled_image = downscale.image(
+                baseline_image,
                 config['image-output']['target_size'],
             )
 

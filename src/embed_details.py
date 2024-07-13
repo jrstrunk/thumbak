@@ -18,7 +18,7 @@ def into_image(original_img, images_to_embed, quality, exif_data):
     for img_to_embed in images_to_embed:
         # Convert embed image to WebP format
         embed_buffer = io.BytesIO()
-        img_to_embed.save(embed_buffer, format="WEBP")
+        img_to_embed.save(embed_buffer, format="WEBP", quality=90)
         embed_data = embed_buffer.getvalue()
         
         # Append the embed data with the separator

@@ -1,11 +1,8 @@
 import PIL as pillow
 
-def downscale(image, size: int):
+def image(image, size: int):
     # Resize the image
     image = __resize_image(image, size)
-
-    # Reduce the color depth of the image
-    image = __reduce_color_depth(image)
 
     return image
 

@@ -1,20 +1,19 @@
 from retinaface import RetinaFace
-import os
 import PIL as pillow
-import pathlib
+import PIL
 import numpy as np
-from typing import Union
 import cv2
 
 # Build the model and store it in memory once when this module is 
 # first imported
 RetinaFace.build_model()
 
-def from_image(image_path: pathlib.Path) -> list:
-    faces = __retinaface_extract_faces(
-        os.fspath(image_path), 
-        expand_face_area=4,
-    )
+def from_image(pil_img: PIL.Image) -> list:
+    # retinaface was made to work with CV2 images, so we need to convert
+    # pillow images to the CV2 format
+    img = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
+
+    faces = __retinaface_extract_faces(img, expand_face_area=10)
 
     # retinaface was made to work with CV2 images, so we need to convert
     # them to pillow images
@@ -26,7 +25,7 @@ def from_image(image_path: pathlib.Path) -> list:
 # A modification of the retinaface package's extract_faces function so that
 # it will return the cropped faces and also the cooordinates of the face
 def __retinaface_extract_faces(
-    img_path: Union[str, np.ndarray],
+    img: np.ndarray,
     threshold: float = 0.9,
     allow_upscaling: bool = True,
     expand_face_area: int = 0,
@@ -42,8 +41,6 @@ def __retinaface_extract_faces(
         expand_face_area (int): expand detected facial area with a percentage
     """
     resp = []
-
-    img = cv2.imread(img_path)
 
     # Validate image shape
     if len(img.shape) != 3 or np.prod(img.shape) == 0:
