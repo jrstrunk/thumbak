@@ -6,5 +6,14 @@ def for_image(image):
 def __to_camel_case(text: str):
     '''Removes spaces and capitalizes the first letter of each work to 
         save bytes. 
-        Ex. "This image is cool" -> "ThisImageIsCool"'''
-    return text
+        Ex. "This image is cool. Thank you." -> "ThisImageIsCool.ThankYou."'''
+    return ''.join(word.capitalize() for word in text.split())
+
+if __name__ == "__main__":
+    assert __to_camel_case("This image is cool. Thank, you.") \
+        == "ThisImageIsCool.Thank,You."
+
+    assert __to_camel_case("This image is cool. Thank, you.") \
+        != "This image is cool. Thank, you."
+
+    print("Tests Passed")
