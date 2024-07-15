@@ -1,7 +1,12 @@
-from PIL import Image
+import PIL
 import io
 
-def into_image(original_img, images_to_embed, quality, exif_data):  
+def into_image(
+    original_img, 
+    images_to_embed: list, 
+    quality: int,
+    exif_data: bytes,
+):   
     # Save the image to an in-memory buffer
     original_buffer = io.BytesIO()
 

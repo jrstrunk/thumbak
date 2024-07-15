@@ -1,16 +1,24 @@
 import PIL
-from PIL.ExifTags import TAGS
 import piexif
 
 # Keeping all the original exif data of an average camera photo leads to 
 # 3x larger files, so we only want to preserve the description data or data
 # the user explicitly specified to keep. The datetime data is important too 
 # but is extracted in a different way.
-# See https://exiv2.org/tags.html for information on all exif tags.
+# See https://exiv2.org/tags.html for information on all exif tags.e
+#
+# In v1, the baseline size is prefixed with "b", the focus point resolution
+# percent of the baseline size is prefixed with "r", the face xywh's are
+# prefixed with "f", and the focus point xywh's are prefixed with "p". The
+# image description is the first and only section containing letters and
+# is prefixed by any capital letter.
 def from_image(
     image: PIL.Image, 
     added_desc: str, 
+    baseline_size: int,
+    focus_point_resolution_percent: int,
     faces_xywh: list[tuple[int, int, int, int]], 
+    focus_points_xywh: list[tuple[int, int, int, int]], 
     user_tags_to_keep: list[str],
 ):
     exif_data = __get_image_exif_data(image)
@@ -19,6 +27,8 @@ def from_image(
 
     img_desc = bytes(exif_data.get("ImageDescription", ""), "utf-8") \
         + b"tbdv1" \
+        + b"b" + bytes(str(baseline_size), "utf-8")  \
+        + b"r" + bytes(str(focus_point_resolution_percent), "utf-8")  \
         + b"".join([
             b"f"
             + bytes(str(x), "utf-8")
@@ -29,6 +39,17 @@ def from_image(
             + b","
             + bytes(str(h), "utf-8")
             for x, y, w, h in faces_xywh
+        ]) \
+        + b"".join([
+            b"p"
+            + bytes(str(x), "utf-8")
+            + b","
+            + bytes(str(y), "utf-8")
+            + b","
+            + bytes(str(w), "utf-8")
+            + b","
+            + bytes(str(h), "utf-8")
+            for x, y, w, h in focus_points_xywh
         ]) \
         + bytes(added_desc, "utf-8")
 

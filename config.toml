@@ -12,6 +12,13 @@ baseline_quality = 90
 # width, if in portrait this will be the height
 target_size = 256
 quality = 25
+
+# The percent of the smallest dimension of the image to crop from
+# the center of the image to save in a higher resolution
+focus_percent = 40
+# The percent of the baseline image resolution to use for the center
+focus_resolution_percent = 100
+
 # Metadata tags specified by the user to keep. Will significantly increase
 # the size of the output file so there are no defaults.
 user_metadata_tags = []
