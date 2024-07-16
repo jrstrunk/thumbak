@@ -114,12 +114,15 @@ def get_file_paths(source_dir, destination_dir):
     return outputs
 
 def get_unique_filename(file_path: pathlib.Path):
-    base, extension = os.path.splitext(file_path)
+    # This needs to account for the .tinybackup.webp extension
+    split_name = os.fspath(file_path).split(".")
+    base = split_name[0]
+    extension = split_name[2]
     counter = 1
 
     for _ in range(10000):
         if os.path.exists(file_path):
-            file_path = f"{base}_{counter}{extension}"
+            file_path = f"{base}_{counter}.tinybackup.{extension}"
             counter += 1
         else:
             break
