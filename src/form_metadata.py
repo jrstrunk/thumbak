@@ -16,7 +16,6 @@ def from_image(
     image: PIL.Image, 
     added_desc: str, 
     baseline_size: int,
-    focus_point_resolution_percent: int,
     faces_xywh: list[tuple[int, int, int, int]], 
     focus_points_xywh: list[tuple[int, int, int, int]], 
     user_tags_to_keep: list[str],
@@ -28,7 +27,6 @@ def from_image(
     img_desc = bytes(exif_data.get("ImageDescription", ""), "utf-8") \
         + b"tbdv1" \
         + b"b" + bytes(str(baseline_size), "utf-8")  \
-        + b"r" + bytes(str(focus_point_resolution_percent), "utf-8")  \
         + b"".join([
             b"f"
             + bytes(str(x), "utf-8")

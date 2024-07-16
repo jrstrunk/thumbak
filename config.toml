@@ -15,8 +15,10 @@ quality = 25
 # The percent of the smallest dimension of the image to crop from
 # the center of the image to save in a higher resolution
 focus_percent = 40
-# The percent of the baseline image resolution to use for the center
-focus_resolution_percent = 100
+
+# The quality of the extracted parts of the image in greater resolution
+face_quality = 80
+focus_point_quality = 60
 
 # Metadata tags specified by the user to keep. Will significantly increase
 # the size of the output file so there are no defaults.

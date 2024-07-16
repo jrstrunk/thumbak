@@ -43,35 +43,16 @@ def main():
 
             faces: list = extract_faces.from_image(baseline_image)
 
-            focus_resolution: float = \
-                config['image-output']['focus_resolution_percent'] / 100
-
-            full_res_focus_points: list = extract_focus.from_image(
+            focus_points: list = extract_focus.from_image(
                 baseline_image,
                 config['image-output']['focus_percent'],
                 [convert.xywh_to_pil_rect(faces["xywh"]) for faces in faces],
             )
 
-            focus_points: list = [
-                {
-                    "img": downscale.image(
-                        focus_point["img"], 
-                        min(focus_point["xywh"][2], focus_point["xywh"][3]) 
-                            * focus_resolution,
-                    ),
-                    "xywh": convert.xywh_to_scale(
-                        focus_point["xywh"], 
-                        focus_resolution,
-                    ),
-                }
-                for focus_point in full_res_focus_points
-            ]
-
             metadata: bytes = form_metadata.from_image(
                 baseline_image, 
                 img_description, 
                 config['image-input']['baseline_size'],
-                config['image-output']['focus_resolution_percent'],
                 [faces["xywh"] for faces in faces],
                 [focus_point["xywh"] for focus_point in focus_points],
                 config['image-output']['user_metadata_tags'],
@@ -84,7 +65,9 @@ def main():
 
             image_with_emdeded_data: bytes = embed_details.into_image(
                 tiny_image, 
+                config['image-output']['face_quality'],
                 [faces["img"] for faces in faces],
+                config['image-output']['focus_point_quality'],
                 [focus_point["img"] for focus_point in focus_points],
                 config['image-output']['quality'],
                 metadata,

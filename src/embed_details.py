@@ -3,7 +3,9 @@ import io
 
 def into_image(
     original_img, 
+    face_quality: int,
     faces_to_embed: list, 
+    focus_point_quality: int,
     focus_points_to_embed: list, 
     quality: int,
     exif_data: bytes,
@@ -24,7 +26,7 @@ def into_image(
     for face_to_embed in faces_to_embed:
         # Convert embed image to WebP format
         embed_buffer = io.BytesIO()
-        face_to_embed.save(embed_buffer, format="WEBP", quality=80)
+        face_to_embed.save(embed_buffer, format="WEBP", quality=face_quality)
         embed_data = embed_buffer.getvalue()
         
         # Append the embed data with the separator
@@ -34,7 +36,7 @@ def into_image(
     for focus_point_to_embed in focus_points_to_embed:
         # Convert embed image to WebP format
         embed_buffer = io.BytesIO()
-        focus_point_to_embed.save(embed_buffer, format="WEBP", quality=60)
+        focus_point_to_embed.save(embed_buffer, format="WEBP", quality=focus_point_quality)
         embed_data = embed_buffer.getvalue()
         
         # Append the embed data with the separator
