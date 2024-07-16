@@ -162,6 +162,11 @@ cython_debug/
 input/*[\.]*
 input/**
 input_store/**
+output
 output/*[\.]*
 output/**
+restored
+restored/**
 *_test/**
+*_test
+*_store
