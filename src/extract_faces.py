@@ -85,7 +85,7 @@ def __retinaface_extract_faces(
             y = int(max(0, y - (face_w * 0.75)))
             # Move the bottom edge of the area by 9x the face width to
             # include the entire body
-            h = int(min(img.shape[0], face_h + (face_w * 9)))
+            h = int(min(img.shape[0], face_h + (face_w * 11)))
 
         facial_img = img[y : y + h, x : x + w]
 
