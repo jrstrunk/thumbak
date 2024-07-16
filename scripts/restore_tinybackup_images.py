@@ -89,7 +89,7 @@ def upscale_image(input_path, output_path):
         resized_img.paste(embedded_img, (details_coords[i][0], details_coords[i][1]))
 
     # Save the resized image
-    resized_img.save(os.fspath(output_path))
+    resized_img.save(os.fspath(output_path).replace("tinybackup", "tinyrestore"))
 
 def get_image_exif_data(image):
     exif_data = image._getexif()

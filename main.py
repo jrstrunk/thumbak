@@ -27,7 +27,7 @@ def main():
 
             img_date: str = determine_date.from_image(input_image, f['input'])
 
-            output_img_filename: str = (img_date or str(i)) + ".webp"
+            output_img_filename: str = (img_date or str(i)) + ".tinybackup.webp"
             f["output"] = get_unique_filename(
                 f["output"].with_name(output_img_filename)
             )
