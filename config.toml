@@ -4,8 +4,7 @@ accepted_video_formats  = [".mp4", ".webm", ".mkv"]
 [image-input]
 # The largest dimension of the baseline image, what faces and the 
 # focus point are cropped from.
-baseline_size = 1080
-baseline_quality = 90
+baseline_size = 720
 
 [image-output]
 # The largest dimension of the output image, if in landscape this will be the

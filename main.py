@@ -84,8 +84,8 @@ def main():
 
             image_with_emdeded_data: bytes = embed_details.into_image(
                 tiny_image, 
-                [faces["img"] for faces in faces]
-                + [focus_point["img"] for focus_point in focus_points],
+                [faces["img"] for faces in faces],
+                [focus_point["img"] for focus_point in focus_points],
                 config['image-output']['quality'],
                 metadata,
             )

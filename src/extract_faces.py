@@ -70,6 +70,22 @@ def __retinaface_extract_faces(
             y = max(0, y - int((expanded_h - h) / 2))
             w = min(img.shape[1] - x, expanded_w)
             h = min(img.shape[0] - y, expanded_h)
+    
+        # If the smallest dimension of the face is less than 8% of the
+        # smallest dimension of the image, then expand the face area to 
+        # try and include the entire body since this is a far away shot
+        face_w = min(w, h)
+        face_h = max(w, h)
+        if face_w / min(img.shape[0], img.shape[1]) < 0.08:
+            # Move the left edge of the area by 1.5x the face width
+            x = int(max(0, x - (face_w * 1.5)))
+            # Move the right edge of the area by 1.5x the face width
+            w = int(min(img.shape[1], face_w + (face_w * 3)))
+            # Move the top edge of the area by 0.75x the face width
+            y = int(max(0, y - (face_w * 0.75)))
+            # Move the bottom edge of the area by 9x the face width to
+            # include the entire body
+            h = int(min(img.shape[0], face_h + (face_w * 9)))
 
         facial_img = img[y : y + h, x : x + w]
 
