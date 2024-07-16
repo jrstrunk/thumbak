@@ -67,7 +67,7 @@ def __retinaface_extract_faces(
 
             # overwrite facial area
             x = max(0, x - int((expanded_w - w) / 2))
-            y = max(0, y - int((expanded_h - h) / 2))
+            y = max(0, y - int(expanded_h - h)) # Do not div by 2 here to make the area above the face bigger
             w = min(img.shape[1] - x, expanded_w)
             h = min(img.shape[0] - y, expanded_h)
     
