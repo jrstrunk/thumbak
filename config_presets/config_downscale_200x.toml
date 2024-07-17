@@ -1,0 +1,32 @@
+accepted_image_formats = [".jpg", ".jpeg", ".png", ".webp"]
+accepted_video_formats  = [".mp4", ".webm", ".mkv"]
+
+[image-input]
+# The largest dimension of the baseline image, what faces and the 
+# focus point are cropped from.
+baseline_size = 480
+
+[image-output]
+# The largest dimension of the output image, if in landscape this will be the
+# width, if in portrait this will be the height
+target_size = 64
+quality = 5
+
+# The percent of the smallest dimension of the image to crop from
+# the center of the image to save in a higher resolution
+focus_percent = 70
+
+# The quality of the extracted parts of the image in greater resolution
+face_quality = 30
+focus_point_quality = 10
+
+# Metadata tags specified by the user to keep. Will significantly increase
+# the size of the output file so there are no defaults.
+user_metadata_tags = []
+
+[video-output]
+target_size = 192
+crf = 25 # Constant Rate Factor
+format = ".webm"
+video_bitrate = "16k"
+audio_bitrate = "16k"
