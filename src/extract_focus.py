@@ -1,10 +1,11 @@
 import src.convert as convert
 
-def from_image(image, percent, existing_crop_rects):
+def from_image(image, percent, existing_crop_rects, quality):
     # Determine the smallest dimension
     width, height = image.size
-    center_rect = __get_center_area(width, height, percent)
+    center_rect: tuple = __get_center_area(width, height, int(percent * 0.9))
 
+    # The center rectagle that represents the area of most focus
     center_rects = [center_rect]
 
     for existing_crop_rect in existing_crop_rects:
@@ -17,9 +18,42 @@ def from_image(image, percent, existing_crop_rects):
             )
         center_rects = __flatten(center_rects)
 
+    # Expanded areas around the center rectangle to capture non-center detail
+    x, y, w, h = convert.pil_rect_to_xywh(center_rect)
+    expanded_rects = [
+        (x + w // 4, y - h // 4, x + int(w * 0.75), y), # Top area
+        (x + w, y + h // 4, x + int(w * 1.25), y + int(h * 0.75)), # Right area 
+        (x + w // 4, y + h, x + int(w * 0.75), y + int(h * 1.25)), # Bottom area
+        (x - w // 4, y + h // 4, x, y + int(h * 0.75)), # Left area
+    ]
+
+    # Make sure all coords are within the image bounds
+    expanded_rects = [__inbound(rect, width, height) for rect in expanded_rects]
+
+    for existing_crop_rect in existing_crop_rects:
+        for i, expanded_rect in enumerate(expanded_rects):
+            # Replace the current center rect with the new rects after the
+            # the existing rects where cut from it
+            expanded_rects[i] = __cut_overlapping_rectangle(
+                existing_crop_rect,
+                expanded_rect,
+            )
+        expanded_rects = __flatten(expanded_rects)
+
     return [
-        {"img": image.crop(rect), "xywh": convert.pil_rect_to_xywh(rect)} 
+        {
+            "img": image.crop(rect),
+            "xywh": convert.pil_rect_to_xywh(rect),
+            "quality": int(quality * 0.80),
+        }
         for rect in center_rects
+    ] + [
+        {
+            "img": image.crop(rect),
+            "xywh": convert.pil_rect_to_xywh(rect),
+            "quality": int(quality * 0.20),
+        }
+        for rect in expanded_rects
     ]
 
 def __get_center_area(width, height, percent):
@@ -89,3 +123,11 @@ def __cut_overlapping_rectangle(rect1, rect2):
 def __flatten(xss):
     """Flattens a list of lists into a single list of elements"""
     return [x for xs in xss for x in xs]
+
+def __inbound(ltrb, img_width, img_height):
+    return (
+        max(ltrb[0], 0),
+        max(ltrb[1], 0),
+        min(ltrb[2], img_width),
+        min(ltrb[3], img_height),
+    )

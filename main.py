@@ -41,12 +41,16 @@ def main():
 
             img_description: str = generate_description.for_image(baseline_image)
 
-            faces: list = extract_faces.from_image(baseline_image)
+            faces: list = extract_faces.from_image(
+                baseline_image,
+                config['image-output']['face_quality'],
+            )
 
             focus_points: list = extract_focus.from_image(
                 baseline_image,
                 config['image-output']['focus_percent'],
                 [convert.xywh_to_pil_rect(faces["xywh"]) for faces in faces],
+                config['image-output']['focus_point_quality'],
             )
 
             metadata: bytes = form_metadata.from_image(
@@ -65,10 +69,8 @@ def main():
 
             image_with_emdeded_data: bytes = embed_details.into_image(
                 tiny_image, 
-                config['image-output']['face_quality'],
-                [faces["img"] for faces in faces],
-                config['image-output']['focus_point_quality'],
-                [focus_point["img"] for focus_point in focus_points],
+                faces,
+                focus_points,
                 config['image-output']['quality'],
                 metadata,
             )

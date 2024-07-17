@@ -8,7 +8,7 @@ import cv2
 # first imported
 RetinaFace.build_model()
 
-def from_image(pil_img: PIL.Image) -> list:
+def from_image(pil_img: PIL.Image, quality: int) -> list:
     # retinaface was made to work with CV2 images, so we need to convert
     # pillow images to the CV2 format
     img = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
@@ -18,7 +18,11 @@ def from_image(pil_img: PIL.Image) -> list:
     # retinaface was made to work with CV2 images, so we need to convert
     # them to pillow images
     return [
-        {"img": pillow.Image.fromarray(face["img"]), "xywh": face["xywh"]} 
+        {
+            "img": pillow.Image.fromarray(face["img"]),
+            "xywh": face["xywh"],
+            "quality": quality,
+        }
         for face in faces
     ]
 
