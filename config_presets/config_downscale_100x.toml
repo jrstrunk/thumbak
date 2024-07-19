@@ -14,7 +14,7 @@ quality = 5
 
 # The percent of the smallest dimension of the image to crop from
 # the center of the image to save in a higher resolution
-focus_percent = 50
+focus_percent = 45
 
 # The quality of the extracted parts of the image in greater resolution
 face_quality = 60
@@ -25,8 +25,7 @@ focus_point_quality = 10
 user_metadata_tags = []
 
 [video-output]
-target_size = 192
-crf = 25
-format = ".webm"
-video_bitrate = "16k"
-audio_bitrate = "16k"
+target_size = 720
+frame_rate = 8
+crf = 50
+audio_bitrate = "32k"

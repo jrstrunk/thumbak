@@ -1,5 +1,5 @@
 import PIL
-from PIL import Image, ExifTags
+from PIL import Image
 import os
 import io
 import pathlib
@@ -110,5 +110,5 @@ output_path = 'restored'
 
 all_files = get_file_paths(input_path, output_path)
 
-for file in all_files:
+for file in [f for f in all_files if f['input'].suffix.lower() == ".webp"]:
     upscale_image(file["input"], file["output"])

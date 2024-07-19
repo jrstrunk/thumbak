@@ -80,14 +80,13 @@ def main():
                 f.write(image_with_emdeded_data)
 
         elif f['input'].suffix.lower() in config['accepted_video_formats']:
-            video.downscale(
+            downscale.video(
                 f['input'],
                 f['output'],
-                config['video-output']['crf'],
                 config['video-output']['target_size'],
-                config['video-output']['video_bitrate'],
+                config['video-output']['frame_rate'],
+                config['video-output']['crf'],
                 config['video-output']['audio_bitrate'],
-                convert_to_webm = config['video-output']['format'] == ".webm"
             )
 
 def get_file_paths(source_dir, destination_dir):

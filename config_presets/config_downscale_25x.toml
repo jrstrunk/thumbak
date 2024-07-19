@@ -23,10 +23,3 @@ focus_point_quality = 70
 # Metadata tags specified by the user to keep. Will significantly increase
 # the size of the output file so there are no defaults.
 user_metadata_tags = []
-
-[video-output]
-target_size = 192
-crf = 25 # Constant Rate Factor
-format = ".webm"
-video_bitrate = "16k"
-audio_bitrate = "16k"

@@ -1,4 +1,7 @@
 import PIL as pillow
+import pathlib
+import os
+import subprocess
 
 def image(image, size: int):
     # Resize the image
@@ -56,3 +59,50 @@ def __resize_crop_image(image, target_size):
         )
 
     return resized_image
+
+def video(
+    input_path: pathlib.Path,
+    output_path: pathlib.Path,
+    target_size: int,
+    frame_rate: int,
+    crf: int,
+    audio_bitrate: str,
+):
+    output_path = output_path.with_suffix(".webm")
+
+    # Command to get the video dimensions
+    command = [
+        'ffprobe', 
+        '-v', 'error', 
+        '-select_streams', 'v:0', 
+        '-show_entries', 'stream=width,height', 
+        '-of', 'csv=s=x:p=0', 
+        os.fspath(input_path),
+    ]
+    output = subprocess.check_output(command).decode('utf-8')
+    width, height = map(int, output.strip().split('x'))
+
+    # Determine the scale parameters
+    if width < height:
+        scale = f'{target_size}:-1'
+    else:
+        scale = f'-1:{target_size}'
+
+    subprocess.run([
+        "ffmpeg",
+        "-i", os.fspath(input_path),
+        "-vf", f"scale={scale}",
+        "-r", str(frame_rate),
+        "-c:v", "libvpx-vp9",
+        "-crf", str(crf),
+        "-c:a", "libopus",
+        "-b:a", audio_bitrate,
+        "-vbr", "on",
+        "-compression_level", "10",
+        "-y",
+        os.fspath(output_path)
+    ], 
+        check=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
