@@ -5,7 +5,6 @@ import PIL
 import src.convert as convert
 import src.determine_date as determine_date
 import src.downscale as downscale
-import src.downscale_video as video
 import src.embed_details as embed_details
 import src.extract_faces as extract_faces
 import src.extract_focus as extract_focus
@@ -23,61 +22,64 @@ def main():
         print(f"{f['input']} -> ", end="")
 
         if f['input'].suffix.lower() in config['accepted_image_formats']:
-            input_image: PIL.Image = PIL.Image.open(f['input'])
+            try:
+                input_image: PIL.Image = PIL.Image.open(f['input'])
 
-            img_date: str = determine_date.from_image(input_image, f['input'])
+                img_date: str = determine_date.from_image(input_image, f['input'])
 
-            output_img_filename: str = (img_date or str(i)) + ".tinybackup.webp"
-            f["output"] = get_unique_filename(
-                f["output"].with_name(output_img_filename)
-            )
+                output_img_filename: str = (img_date or str(i)) + ".tinybackup.webp"
+                f["output"] = get_unique_filename(
+                    f["output"].with_name(output_img_filename)
+                )
 
-            print(f["output"])
+                print(f["output"])
 
-            baseline_image: PIL.Image = downscale.image(
-                input_image,
-                config['image-input']['baseline_size'],
-            )
+                baseline_image: PIL.Image = downscale.image(
+                    input_image,
+                    config['image-input']['baseline_size'],
+                )
 
-            img_description: str = generate_description.for_image(baseline_image)
+                img_description: str = generate_description.for_image(baseline_image)
 
-            faces: list = extract_faces.from_image(
-                baseline_image,
-                config['image-output']['face_quality'],
-            )
+                faces: list = extract_faces.from_image(
+                    baseline_image,
+                    config['image-output']['face_quality'],
+                )
 
-            focus_points: list = extract_focus.from_image(
-                baseline_image,
-                config['image-output']['focus_percent'],
-                [convert.xywh_to_pil_rect(faces["xywh"]) for faces in faces],
-                config['image-output']['focus_point_quality'],
-            )
+                focus_points: list = extract_focus.from_image(
+                    baseline_image,
+                    config['image-output']['focus_percent'],
+                    [convert.xywh_to_pil_rect(faces["xywh"]) for faces in faces],
+                    config['image-output']['focus_point_quality'],
+                )
 
-            metadata: bytes = form_metadata.from_image(
-                baseline_image, 
-                img_description, 
-                config['image-input']['baseline_size'],
-                [faces["xywh"] for faces in faces],
-                [focus_point["xywh"] for focus_point in focus_points],
-                config['image-output']['user_metadata_tags'],
-            )
+                metadata: bytes = form_metadata.from_image(
+                    baseline_image, 
+                    img_description, 
+                    config['image-input']['baseline_size'],
+                    [faces["xywh"] for faces in faces],
+                    [focus_point["xywh"] for focus_point in focus_points],
+                    config['image-output']['user_metadata_tags'],
+                )
 
-            tiny_image: PIL.Image = downscale.image(
-                baseline_image,
-                config['image-output']['target_size'],
-            )
+                tiny_image: PIL.Image = downscale.image(
+                    baseline_image,
+                    config['image-output']['target_size'],
+                )
 
-            image_with_emdeded_data: bytes = embed_details.into_image(
-                tiny_image, 
-                faces,
-                focus_points,
-                config['image-output']['quality'],
-                metadata,
-            )
+                image_with_emdeded_data: bytes = embed_details.into_image(
+                    tiny_image, 
+                    faces,
+                    focus_points,
+                    config['image-output']['quality'],
+                    metadata,
+                )
 
-            # Save the combined data as a new WebP file
-            with open(f["output"], "wb") as f:
-                f.write(image_with_emdeded_data)
+                # Save the combined data as a new WebP file
+                with open(f["output"], "wb") as f:
+                    f.write(image_with_emdeded_data)
+            except Exception as e:
+                print(f"Error processing:"), e
 
         elif f['input'].suffix.lower() in config['accepted_video_formats']:
             downscale.video(
