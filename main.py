@@ -32,8 +32,6 @@ def main():
                     f["output"].with_name(output_img_filename)
                 )
 
-                print(f["output"])
-
                 baseline_image: PIL.Image = downscale.image(
                     input_image,
                     config['image-input']['baseline_size'],
@@ -78,8 +76,12 @@ def main():
                 # Save the combined data as a new WebP file
                 with open(f["output"], "wb") as f:
                     f.write(image_with_emdeded_data)
+
             except Exception as e:
-                print(f"Error processing:"), e
+                print(f"Processing error:"), e
+                continue
+            
+            print(f["output"])
 
         elif f['input'].suffix.lower() in config['accepted_video_formats']:
             downscale.video(

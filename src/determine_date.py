@@ -6,7 +6,7 @@ import os
 import re
 import itertools
 
-def from_image(image: PIL.Image, file_path: pathlib.Path) -> str: 
+def from_image(image, file_path: pathlib.Path) -> str: 
     file_date, file_offset = from_photo_metadata(image)
 
     if not file_date:
@@ -34,7 +34,7 @@ def __shorten_offset(offset: str):
     return offset
 
 
-def from_photo_metadata(image: PIL.Image):
+def from_photo_metadata(image):
     """Photo metadata often stores the time in Local Time"""
     exif_data = __get_image_exif_data(image)
 
