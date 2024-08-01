@@ -74,8 +74,8 @@ def main():
                 )
 
                 # Save the combined data as a new WebP file
-                with open(f["output"], "wb") as f:
-                    f.write(image_with_emdeded_data)
+                with open(f["output"], "wb") as output:
+                    output.write(image_with_emdeded_data)
 
             except Exception as e:
                 print(f"Processing error:"), e
