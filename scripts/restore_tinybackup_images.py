@@ -4,6 +4,7 @@ import os
 import io
 import pathlib
 import re
+import shutil
 
 def get_file_paths(source_dir, destination_dir):
     source_path = pathlib.Path(source_dir)
@@ -112,3 +113,6 @@ all_files = get_file_paths(input_path, output_path)
 
 for file in [f for f in all_files if f['input'].suffix.lower() == ".webp"]:
     upscale_image(file["input"], file["output"])
+
+for file in [f for f in all_files if f['input'].suffix.lower() == ".webm"]:
+    shutil.copy2(file["input"], file["output"])
