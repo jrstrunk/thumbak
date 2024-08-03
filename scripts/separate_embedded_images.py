@@ -25,7 +25,7 @@ def read_embedded_images(input_path):
     return original_img, embedded_imgs
 
 # Usage
-original, embedded_list = read_embedded_images("embed_check/PXL_20240507_164205009.webp")
+original, embedded_list = read_embedded_images("output/20240529092231-4.tinybackup.webp")
 original.save("concat_mulitple_original.webp")
 for i, img in enumerate(embedded_list):
     img.save(f"concat_mulitple_embedded_{i+1}.webp")

@@ -14,7 +14,6 @@ import piexif
 # is prefixed by any capital letter.
 def from_image(
     image: PIL.Image, 
-    added_desc: str, 
     baseline_size: int,
     faces_xywh: list[tuple[int, int, int, int]], 
     focus_points_xywh: list[tuple[int, int, int, int]], 
@@ -48,8 +47,7 @@ def from_image(
             + b","
             + bytes(str(h), "utf-8")
             for x, y, w, h in focus_points_xywh
-        ]) \
-        + bytes(added_desc, "utf-8")
+        ])
 
     exif_dict = {
         "0th": {},

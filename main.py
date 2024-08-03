@@ -8,6 +8,7 @@ import src.downscale as downscale
 import src.embed_details as embed_details
 import src.extract_faces as extract_faces
 import src.extract_focus as extract_focus
+import src.extract_details as extract_details
 import src.form_metadata as form_metadata
 import src.generate_description as generate_description
 
@@ -37,8 +38,6 @@ def main():
                     config['image-input']['baseline_size'],
                 )
 
-                img_description: str = generate_description.for_image(baseline_image)
-
                 faces: list = extract_faces.from_image(
                     baseline_image,
                     config['image-output']['face_quality'],
@@ -51,9 +50,10 @@ def main():
                     config['image-output']['focus_point_quality'],
                 )
 
+                details = extract_details.from_image(baseline_image)
+
                 metadata: bytes = form_metadata.from_image(
                     baseline_image, 
-                    img_description, 
                     config['image-input']['baseline_size'],
                     [faces["xywh"] for faces in faces],
                     [focus_point["xywh"] for focus_point in focus_points],
@@ -69,6 +69,7 @@ def main():
                     tiny_image, 
                     faces,
                     focus_points,
+                    details,
                     config['image-output']['quality'],
                     metadata,
                 )
@@ -78,7 +79,7 @@ def main():
                     output.write(image_with_emdeded_data)
 
             except Exception as e:
-                print(f"Processing error:"), e
+                print(f"Processing error:", e)
                 continue
             
             print(f["output"])

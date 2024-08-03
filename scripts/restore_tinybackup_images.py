@@ -6,6 +6,9 @@ import pathlib
 import re
 import shutil
 
+# This file has some duplicate functions with the main project src so it can
+# be used as a standalone script to restore tinybackup images
+
 def get_file_paths(source_dir, destination_dir):
     source_path = pathlib.Path(source_dir)
     destination_path = pathlib.Path(destination_dir)
@@ -60,14 +63,6 @@ def upscale_image(input_path, output_path):
         re.findall(r"b\d+", desc)[0].replace("b", "")
     )
 
-    details_coords = [
-        parse_coords(coords.replace("f", ""))
-        for coords in re.findall(r"f\d+,\d+,\d+,\d+", desc)
-    ] + [
-        parse_coords(coords.replace("p", ""))
-        for coords in re.findall(r"p\d+,\d+,\d+,\d+", desc)
-    ]
-
     # Determine the scaling factor
     if width < height:
         scale_factor = baseline_size / width
@@ -85,6 +80,14 @@ def upscale_image(input_path, output_path):
     embedded_imgs = [
         PIL.Image.open(io.BytesIO(img_data)) for img_data in embedded_data_list
     ]
+
+    details_coords = [
+        parse_coords(coords.replace("f", ""))
+        for coords in re.findall(r"f\d+,\d+,\d+,\d+", desc)
+    ] + [
+        parse_coords(coords.replace("p", ""))
+        for coords in re.findall(r"p\d+,\d+,\d+,\d+", desc)
+    ] + calculate_details_coords(new_width, new_height)
 
     for i, embedded_img in enumerate(embedded_imgs):
         resized_img.paste(embedded_img, (details_coords[i][0], details_coords[i][1]))
@@ -104,6 +107,33 @@ def get_image_exif_data(image):
 
 def parse_coords(coords):
     return tuple(int(coord) for coord in coords.split(","))
+
+def calculate_details_coords(width, height):
+    detail_crop_size = 64
+    half_crop = detail_crop_size // 2
+
+    smallest_dimension = min(width, height)
+
+    # Define the centers of each quadrant
+    centers = [
+        (smallest_dimension // 4, smallest_dimension // 4),          # Top-left quadrant center
+        (width - (smallest_dimension // 4), smallest_dimension // 4),      # Top-right quadrant center
+        (smallest_dimension // 4, height - (smallest_dimension // 4)),      # Bottom-left quadrant center
+        (width - (smallest_dimension // 4), height - (smallest_dimension // 4))   # Bottom-right quadrant center
+    ]
+
+    coords = []
+    for center in centers:
+        left = center[0] - half_crop
+        upper = center[1] - half_crop
+        right = center[0] + half_crop
+        lower = center[1] + half_crop
+        coords.append((left, upper, right, lower))
+    
+    return coords
+
+def convert_pil_rect_to_xywh(rect: tuple[int, int, int, int]):
+    return (rect[0], rect[1], rect[2] - rect[0], rect[3] - rect[1])
 
 # Example usage
 input_path = 'output'
