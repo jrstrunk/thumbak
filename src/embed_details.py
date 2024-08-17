@@ -8,7 +8,30 @@ def into_image(
     details_to_embed: list,
     quality: int,
     exif_data: bytes,
-):   
+    debug: bool,
+):
+    # Add a green border to the images in debug mode
+    if debug:
+        fill = (0, 255, 0)
+        faces_to_embed = [
+            {
+                "img": PIL.ImageOps.expand(f["img"], fill=fill, border=1),
+                "quality": f["quality"],
+            } for f in faces_to_embed
+        ]
+
+        focus_points_to_embed = [
+            {
+                "img": PIL.ImageOps.expand(p["img"], fill=fill, border=1),
+                "quality": p["quality"],
+            } for p in focus_points_to_embed
+        ]
+
+        details_to_embed = [
+            PIL.ImageOps.expand(d, fill=fill, border=1)
+            for d in details_to_embed
+        ]
+
     # Save the image to an in-memory buffer
     original_buffer = io.BytesIO()
 
@@ -25,6 +48,7 @@ def into_image(
     for face_to_embed in faces_to_embed:
         # Convert embed image to WebP format
         embed_buffer = io.BytesIO()
+
         face_to_embed["img"].save(
             embed_buffer, 
             format="WEBP", 

@@ -72,6 +72,7 @@ def main():
                     details,
                     config['image-output']['quality'],
                     metadata,
+                    config['debug']['enabled'],
                 )
 
                 # Save the combined data as a new WebP file

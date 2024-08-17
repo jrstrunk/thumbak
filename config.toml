@@ -29,3 +29,6 @@ target_size = 720
 frame_rate = 8
 crf = 50
 audio_bitrate = "32k"
+
+[debug]
+enabled = true
