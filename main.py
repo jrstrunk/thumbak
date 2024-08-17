@@ -46,7 +46,6 @@ def main():
                 focus_points: list = extract_focus.from_image(
                     baseline_image,
                     config['image-output']['focus_percent'],
-                    [convert.xywh_to_pil_rect(faces["xywh"]) for faces in faces],
                     config['image-output']['focus_point_quality'],
                 )
 
