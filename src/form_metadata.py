@@ -2,10 +2,13 @@ import PIL
 import piexif
 
 # Keeping all the original exif data of an average camera photo leads to 
-# 3x larger files, so we only want to preserve the description data or data
-# the user explicitly specified to keep. The datetime data is important too 
-# but is extracted in a different way.
-# See https://exiv2.org/tags.html for information on all exif tags.e
+# an extra ~20kb of data (which almost doubles the size we want!), so we only
+# want to preserve the description data or data the user explicitly specified
+# to keep. The datetime data is important too but is extracted in a different
+# way. See https://exiv2.org/tags.html for information on all exif tags.
+#
+# Saving data in the ImageDescription tag takes up about 60 more bytes than
+# just embedding the data directly into the file as bytes (because of padding).
 #
 # In v1, the baseline size is prefixed with "b", the focus point resolution
 # percent of the baseline size is prefixed with "r", the face xywh's are

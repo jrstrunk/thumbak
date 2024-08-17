@@ -1,5 +1,6 @@
 import PIL
 from PIL import Image
+import pillow_avif
 import os
 import io
 import pathlib
@@ -46,6 +47,8 @@ def upscale_image(input_path, output_path):
 
     # Extract the original and embedded image data
     original_data = raw_data[:separator_indices[0]]
+    # medatadata = str(raw_data[separator_indices[0] + len(separator):separator_indices[1]])
+
     embedded_data_list = [
         raw_data[start + len(separator):end] 
         for start, end in zip(separator_indices, separator_indices[1:] + [None])
@@ -57,7 +60,7 @@ def upscale_image(input_path, output_path):
     # Get the original dimensions and details coords
     width, height = tiny_img.size
 
-    desc = get_image_exif_data(tiny_img).get("ImageDescription").split("tbdv1")[1]
+    desc = "tbdv1b1080f292,154,288,437f876,408,72,220f574,373,194,248p504,628,432,128p504,621,372,7p504,591,70,30p768,591,108,30p580,324,356,49p768,373,168,35p768,408,108,183p654,363,148,10p768,373,34,35p948,453,2,92p654,621,148,15p768,591,34,30".split("tbdv1")[1]
 
     baseline_size = int(
         re.findall(r"b\d+", desc)[0].replace("b", "")
@@ -141,7 +144,7 @@ output_path = 'restored'
 
 all_files = get_file_paths(input_path, output_path)
 
-for file in [f for f in all_files if f['input'].suffix.lower() == ".webp"]:
+for file in [f for f in all_files if f['input'].suffix.lower() == ".avif"]:
     upscale_image(file["input"], file["output"])
 
 for file in [f for f in all_files if f['input'].suffix.lower() == ".webm"]:

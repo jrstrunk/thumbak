@@ -2,6 +2,7 @@ import os
 import tomllib
 import pathlib
 import PIL
+import pillow_avif
 import src.convert as convert
 import src.determine_date as determine_date
 import src.downscale as downscale
@@ -10,7 +11,6 @@ import src.extract_faces as extract_faces
 import src.extract_focus as extract_focus
 import src.extract_details as extract_details
 import src.form_metadata as form_metadata
-import src.generate_description as generate_description
 
 def main():
     with open("config.toml", "rb") as f:
@@ -28,7 +28,7 @@ def main():
 
                 img_date: str = determine_date.from_image(input_image, f['input'])
 
-                output_img_filename: str = (img_date or str(i)) + ".tinybackup.webp"
+                output_img_filename: str = (img_date or str(i)) + ".tinybackup.avif"
                 f["output"] = get_unique_filename(
                     f["output"].with_name(output_img_filename)
                 )

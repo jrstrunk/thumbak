@@ -1,4 +1,5 @@
 from PIL import Image
+import pillow_avif
 import io
 
 def read_embedded_images(input_path):
@@ -25,7 +26,7 @@ def read_embedded_images(input_path):
     return original_img, embedded_imgs
 
 # Usage
-original, embedded_list = read_embedded_images("output/20240529092231-4.tinybackup.webp")
-original.save("concat_mulitple_original.webp")
+original, embedded_list = read_embedded_images("output/20240503195431-4_6.tinybackup.avif")
+original.save("concat_mulitple_original.avif")
 for i, img in enumerate(embedded_list):
-    img.save(f"concat_mulitple_embedded_{i+1}.webp")
+    img.save(f"concat_mulitple_embedded_{i+1}.avif")
