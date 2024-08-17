@@ -44,21 +44,6 @@ def into_image(
 
     combined_data = original_buffer.getvalue()
 
-    # Append each face image to embed
-    for face_to_embed in faces_to_embed:
-        # Convert embed image to WebP format
-        embed_buffer = io.BytesIO()
-
-        face_to_embed["img"].save(
-            embed_buffer, 
-            format="WEBP", 
-            quality=face_to_embed["quality"],
-        )
-        embed_data = embed_buffer.getvalue()
-        
-        # Append the embed data with the separator
-        combined_data += b"TBEMBEDv1" + embed_data 
-
     # Append each focus point image to embed
     for focus_point_to_embed in focus_points_to_embed:
         # Convert embed image to WebP format
@@ -86,5 +71,20 @@ def into_image(
         
         # Append the embed data with the separator
         combined_data += b"TBEMBEDv1" + embed_data 
+
+    # Append each face image to embed
+    for face_to_embed in faces_to_embed:
+        # Convert embed image to WebP format
+        embed_buffer = io.BytesIO()
+
+        face_to_embed["img"].save(
+            embed_buffer, 
+            format="WEBP", 
+            quality=face_to_embed["quality"],
+        )
+        embed_data = embed_buffer.getvalue()
+        
+        # Append the embed data with the separator
+        combined_data += b"TBEMBEDv1" + embed_data
 
     return combined_data
