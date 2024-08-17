@@ -49,7 +49,10 @@ def main():
                     config['image-output']['focus_point_quality'],
                 )
 
-                details = extract_details.from_image(baseline_image)
+                details: list = extract_details.from_image(
+                    baseline_image,
+                    config['image-output']['detail_quality'],
+                )
 
                 metadata: bytes = form_metadata.from_image(
                     baseline_image, 

@@ -77,10 +77,10 @@ def into_image(
     for detail_to_embed in details_to_embed:
         # Convert embed image to WebP format
         embed_buffer = io.BytesIO()
-        detail_to_embed.save(
+        detail_to_embed["img"].save(
             embed_buffer,
             format="WEBP",
-            quality=80,
+            quality=detail_to_embed["quality"],
         )
         embed_data = embed_buffer.getvalue()
         
