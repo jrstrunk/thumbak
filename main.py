@@ -72,9 +72,8 @@ def main():
                     faces,
                     focus_points,
                     details,
-                    config['image-output']['quality'],
                     metadata,
-                    config['debug']['enabled'],
+                    config,
                 )
 
                 # Save the combined data as a new WebP file
