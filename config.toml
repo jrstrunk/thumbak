@@ -20,6 +20,16 @@ focus_percent = 45
 face_quality = 60
 focus_point_quality = 10
 
+# The quality of the small parts of the image saved in higher resolution
+# to preserve smaller details
+detail_quality = 60
+
+
+# Replaces parts of an image with all white where a crop of that part of the
+# image is saved in higher resolution. This saves space but makes the image
+# more dependent on restoration processing to be recognizable.
+white_crops = true
+
 # Metadata tags specified by the user to keep. Will significantly increase
 # the size of the output file so there are no defaults.
 user_metadata_tags = []
@@ -29,3 +39,6 @@ target_size = 720
 frame_rate = 8
 crf = 50
 audio_bitrate = "32k"
+
+[debug]
+enabled = false

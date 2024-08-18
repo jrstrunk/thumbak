@@ -1,12 +1,17 @@
 import PIL
+import src.convert as convert
 
-def from_image(image: PIL.Image):
+def from_image(image: PIL.Image, quality: int):
     width, height = image.size
 
     calculate_details_coords(width, height)
 
     return [
-        image.crop(coord)
+        {
+            "img":image.crop(coord),
+            "xywh": convert.ltrb_to_xywh(coord),
+            "quality": quality,
+        }
         for coord in calculate_details_coords(width, height)
     ]
 
