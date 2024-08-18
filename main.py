@@ -46,11 +46,13 @@ def main():
                 focus_points: list = extract_focus.from_image(
                     baseline_image,
                     config['image-output']['focus_percent'],
-                    [convert.xywh_to_pil_rect(faces["xywh"]) for faces in faces],
                     config['image-output']['focus_point_quality'],
                 )
 
-                details = extract_details.from_image(baseline_image)
+                details: list = extract_details.from_image(
+                    baseline_image,
+                    config['image-output']['detail_quality'],
+                )
 
                 metadata: bytes = form_metadata.from_image(
                     baseline_image, 
@@ -70,8 +72,8 @@ def main():
                     faces,
                     focus_points,
                     details,
-                    config['image-output']['quality'],
                     metadata,
+                    config,
                 )
 
                 # Save the combined data as a new WebP file

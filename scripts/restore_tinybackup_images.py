@@ -85,12 +85,12 @@ def upscale_image(input_path, output_path):
     ]
 
     details_coords = [
-        parse_coords(coords.replace("f", ""))
-        for coords in re.findall(r"f\d+,\d+,\d+,\d+", desc)
-    ] + [
         parse_coords(coords.replace("p", ""))
         for coords in re.findall(r"p\d+,\d+,\d+,\d+", desc)
-    ] + calculate_details_coords(new_width, new_height)
+    ] + calculate_details_coords(new_width, new_height) + [
+        parse_coords(coords.replace("f", ""))
+        for coords in re.findall(r"f\d+,\d+,\d+,\d+", desc)
+    ]
 
     for i, embedded_img in enumerate(embedded_imgs):
         resized_img.paste(embedded_img, (details_coords[i][0], details_coords[i][1]))
