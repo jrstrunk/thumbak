@@ -24,11 +24,13 @@ focus_point_quality = 30
 # to preserve smaller details
 detail_quality = 50
 
-
-# Replaces parts of an image with all white where a crop of that part of the
-# image is saved in higher resolution. This saves space but makes the image
-# more dependent on restoration processing to be recognizable.
-white_crops = true
+# Saves the full image in low quality as the baseline image, which can be
+# viewed without any restoration processing, but adds ~4kb to the backup file.
+# This is useful if a full preview of the image is wanted or if the user
+# is worried about not being able to run the restoration processing.
+# Without this option, only a small portion of the image will be shown when
+# viewed without any restoration processing.
+full_baseline = false
 
 # Metadata tags specified by the user to keep. Will significantly increase
 # the size of the output file so there are no defaults.

@@ -20,7 +20,7 @@ def into_image(
     # Save the image to an in-memory buffer
     original_buffer = io.BytesIO()
 
-    if config['image-output']['white_crops']:
+    if not config['image-output']['full_baseline']:
         apply_white_crops_to_baseline(
             original_img,
             faces_to_embed + focus_points_to_embed + details_to_embed,
@@ -28,11 +28,11 @@ def into_image(
             config['image-input']['baseline_size'],
         )
 
-        for focus_point in focus_points_to_embed:
-            apply_white_crops_to_crops(
-                focus_point,
-                faces_to_embed,
-            )
+    for focus_point in focus_points_to_embed:
+        apply_white_crops_to_crops(
+            focus_point,
+            faces_to_embed,
+        )
 
     # This will strip all metadata from the image
     baseline_image = PIL.Image.new(original_img.mode, original_img.size)
