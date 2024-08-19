@@ -75,7 +75,7 @@ def into_image(
         embed_buffer = io.BytesIO()
 
         # This will strip all metadata from the image
-        new_image = PIL.Image.new(detail_to_embed.mode, detail_to_embed["img"].size)
+        new_image = PIL.Image.new(detail_to_embed["img"].mode, detail_to_embed["img"].size)
         new_image.putdata(list(detail_to_embed["img"].getdata()))
 
         new_image.save(
@@ -93,8 +93,8 @@ def into_image(
         # Convert embed image to WebP format
         embed_buffer = io.BytesIO()
 
-        new_image = PIL.Image.new(detail_to_embed.mode, detail_to_embed["img"].size)
-        new_image.putdata(list(detail_to_embed["img"].getdata()))
+        new_image = PIL.Image.new(face_to_embed["img"].mode, face_to_embed["img"].size)
+        new_image.putdata(list(face_to_embed["img"].getdata()))
 
         face_to_embed["img"].save(
             embed_buffer, 
@@ -117,7 +117,7 @@ def apply_white_crops_to_baseline(image, list_of_crops, image_size, crop_baselin
             image, 
             convert.shrink_xywh(
                 convert.xywh_to_scale(crop["xywh"], image_size / crop_baseline_size), 
-                by=5,
+                by=6,
             ),
         )
     
@@ -125,7 +125,7 @@ def apply_white_crops_to_crops(lesser_crop, greater_crops):
     for greater_crop in greater_crops:
         overlap = get_overlap_coordinates(
             lesser_crop["xywh"], 
-            convert.shrink_xywh(greater_crop["xywh"], by=5),
+            convert.shrink_xywh(greater_crop["xywh"], by=6),
         )
 
         if not overlap:
@@ -167,7 +167,7 @@ def get_overlap_coordinates(xywh1, xywh2):
 def white_out_crop_space(image, xywh: tuple[int, int, int, int]):
     """Replaces the crop space with white pixels"""
     draw = ImageDraw.Draw(image)
-    draw.rectangle(convert.xywh_to_ltrb(xywh), fill='white')
+    draw.rectangle(convert.xywh_to_ltrb(xywh), fill='grey')
 
 def apply_green_outline(faces_to_embed, focus_points_to_embed, details_to_embed):
     fill = (0, 255, 0)
