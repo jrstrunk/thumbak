@@ -9,7 +9,7 @@ baseline_size = 1080
 [image-output]
 # The largest dimension of the output image, if in landscape this will be the
 # width, if in portrait this will be the height
-target_size = 480
+target_size = 600
 quality = 30
 
 # The percent of the smallest dimension of the image to crop from
@@ -17,12 +17,12 @@ quality = 30
 focus_percent = 45
 
 # The quality of the extracted parts of the image in greater resolution
-face_quality = 50
+face_quality = 40
 focus_point_quality = 30
 
 # The quality of the small parts of the image saved in higher resolution
 # to preserve smaller details
-detail_quality = 60
+detail_quality = 50
 
 
 # Replaces parts of an image with all white where a crop of that part of the
